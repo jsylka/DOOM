@@ -41,7 +41,7 @@
 #include <sys/ioctl.h>
 
 // Linux voxware output.
-#include <linux/soundcard.h>
+//#include <linux/soundcard.h>
 
 // Timer stuff. Experimental.
 #include <time.h>
