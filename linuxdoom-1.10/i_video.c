@@ -45,7 +45,7 @@ int XShmGetEventBase( Display* dpy ); // problems with g++?
 #include <sys/socket.h>
 
 #include <netinet/in.h>
-#include <errnos.h>
+#include <errno.h>
 #include <signal.h>
 
 #include "doomstat.h"
