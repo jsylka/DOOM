@@ -47,7 +47,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <malloc.h>
+#include <malloc/malloc.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 
