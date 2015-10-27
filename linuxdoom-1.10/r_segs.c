@@ -398,7 +398,11 @@ R_StoreWallRange
     
     // calculate rw_distance for scale calculation
     rw_normalangle = curline->angle + ANG90;
-    offsetangle = abs(rw_normalangle-rw_angle1);
+
+	//  warning: taking the absolute value of unsigned type 'unsigned int' has no effect [-Wabsolute-value]
+	// offsetangle = abs(rw_normalangle-rw_angle1);
+	int result = rw_normalangle-rw_angle1;
+    offsetangle = abs(result);
     
     if (offsetangle > ANG90)
 	offsetangle = ANG90;
