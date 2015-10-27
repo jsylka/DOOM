@@ -30,10 +30,9 @@
 #include <sys/types.h>
 #include <string.h>
 #include <unistd.h>
-#include <malloc/malloc.h>
+#include <stdlib.h>
 #include <fcntl.h>
 #include <sys/stat.h>
-#include <alloca.h>
 #define O_BINARY		0
 #endif
 
