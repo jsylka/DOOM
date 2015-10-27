@@ -253,15 +253,15 @@ default_t	defaults[] =
 
 // UNIX hack, to be removed. 
 #ifdef SNDSERV
-    {"sndserver", (int *) &sndserver_filename, (int) "sndserver"},
+    {"sndserver", (int *) &sndserver_filename, 6969/*(int) "sndserver"*/},
     {"mb_used", &mb_used, 2},
 #endif
     
 #endif
 
 #ifdef LINUX
-    {"mousedev", (int*)&mousedev, (int)"/dev/ttyS0"},
-    {"mousetype", (int*)&mousetype, (int)"microsoft"},
+    {"mousedev", (int*)&mousedev, 6969/*(int)"/dev/ttyS0"*/},
+    {"mousetype", (int*)&mousetype, 6969/*(int)"microsoft"*/},
 #endif
 
     {"use_mouse",&usemouse, 1},
@@ -284,7 +284,7 @@ default_t	defaults[] =
 
     {"usegamma",&usegamma, 0},
 
-    {"chatmacro0", (int *) &chat_macros[0], (int) HUSTR_CHATMACRO0 },
+/*    {"chatmacro0", (int *) &chat_macros[0], (int) HUSTR_CHATMACRO0 },
     {"chatmacro1", (int *) &chat_macros[1], (int) HUSTR_CHATMACRO1 },
     {"chatmacro2", (int *) &chat_macros[2], (int) HUSTR_CHATMACRO2 },
     {"chatmacro3", (int *) &chat_macros[3], (int) HUSTR_CHATMACRO3 },
@@ -293,7 +293,7 @@ default_t	defaults[] =
     {"chatmacro6", (int *) &chat_macros[6], (int) HUSTR_CHATMACRO6 },
     {"chatmacro7", (int *) &chat_macros[7], (int) HUSTR_CHATMACRO7 },
     {"chatmacro8", (int *) &chat_macros[8], (int) HUSTR_CHATMACRO8 },
-    {"chatmacro9", (int *) &chat_macros[9], (int) HUSTR_CHATMACRO9 }
+    {"chatmacro9", (int *) &chat_macros[9], (int) HUSTR_CHATMACRO9 }*/
 
 };
 
