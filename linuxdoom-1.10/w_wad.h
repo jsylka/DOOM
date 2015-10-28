@@ -32,6 +32,17 @@
 //
 // TYPES
 //
+
+/**
+ * Wad info is a header at the beginning of the .wad
+ *
+ * I wad is an internal wad
+ * P was is a patch wad
+ *
+ * 1st four bytes are for the magic number (iwad | pwad)
+ * next 4 bytes are for the number of lumps in the wad
+ * next 4 bytes is for the address of the directory listing (near end of wad)
+ */
 typedef struct
 {
     // Should be "IWAD" or "PWAD".
@@ -42,6 +53,13 @@ typedef struct
 } wadinfo_t;
 
 
+/**
+ * The directory at location of wadinfo_t.int has 16 byte sections
+ *
+ * first 4 is the position in the wad of the lump
+ * second 4 is the size in bytes
+ * name is a 8 char name, if the name is less than 8 chars its padded with 0s
+ */
 typedef struct
 {
     int			filepos;
@@ -66,16 +84,40 @@ extern	void**		lumpcache;
 extern	lumpinfo_t*	lumpinfo;
 extern	int		numlumps;
 
+/**
+ *
+ */
 void    W_InitMultipleFiles (char** filenames);
+/**
+ *
+ */
 void    W_Reload (void);
 
+/**
+ *
+ */
 int	W_CheckNumForName (char* name);
+/**
+ *
+ */
 int	W_GetNumForName (char* name);
 
+/**
+ *
+ */
 int	W_LumpLength (int lump);
+/**
+ *
+ */
 void    W_ReadLump (int lump, void *dest);
 
+/**
+ *
+ */
 void*	W_CacheLumpNum (int lump, int tag);
+/**
+ *
+ */
 void*	W_CacheLumpName (char* name, int tag);
 
 

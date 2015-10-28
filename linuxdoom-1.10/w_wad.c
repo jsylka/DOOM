@@ -64,11 +64,19 @@ void**			lumpcache;
 
 #define strcmpi	strcasecmp
 
+/**
+ * String to upper - send in an array of chars
+ */
 void strupr (char* s)
 {
+    // while deref'd pointer does not == \0 upper it
     while (*s) { *s = toupper(*s); s++; }
 }
 
+/**
+ * Get the length of a file from using man fstat
+ * Check out stat.h for more deets
+ */
 int filelength (int handle) 
 { 
     struct stat	fileinfo;
@@ -135,7 +143,9 @@ ExtractFileBase
 int			reloadlump;
 char*			reloadname;
 
-
+/**
+ * Takes an array of characters
+ */
 void W_AddFile (char *filename)
 {
     wadinfo_t		header;
@@ -157,7 +167,8 @@ void W_AddFile (char *filename)
 	reloadname = filename;
 	reloadlump = numlumps;
     }
-		
+
+    // Open as binary
     if ( (handle = open (filename,O_RDONLY | O_BINARY)) == -1)
     {
 	printf (" couldn't open %s\n",filename);
@@ -178,41 +189,58 @@ void W_AddFile (char *filename)
     }
     else 
     {
-	// WAD file
+	// WAD file -- read in the header
 	read (handle, &header, sizeof(header));
+        // if its not an iwad
 	if (strncmp(header.identification,"IWAD",4))
 	{
-	    // Homebrew levels?
+	    // Homebrew levels? -- if its not a pwad
 	    if (strncmp(header.identification,"PWAD",4))
 	    {
+            // critical error
 		I_Error ("Wad file %s doesn't have IWAD "
 			 "or PWAD id\n", filename);
 	    }
 	    
 	    // ???modifiedgame = true;		
 	}
+
+        // fill in the header with all the pertinent info
+        // wads are stored as little endian. LONG macro does n othing but if
+        // we are on big endian machines, it would swap
 	header.numlumps = LONG(header.numlumps);
 	header.infotableofs = LONG(header.infotableofs);
+
+        // given the amount of lumps in the wad, we are going to allocate memory, for that many entries
 	length = header.numlumps*sizeof(filelump_t);
 	fileinfo = alloca (length);
+        // seek to the directory
 	lseek (handle, header.infotableofs, SEEK_SET);
+        // fill in all the info for the lumps in the directory
 	read (handle, fileinfo, length);
+        // add into the total number of lumps we have indexed
 	numlumps += header.numlumps;
     }
 
     
-    // Fill in lumpinfo
+    // Fill in lumpinfo -- resize if need be
     lumpinfo = realloc (lumpinfo, numlumps*sizeof(lumpinfo_t));
 
     if (!lumpinfo)
 	I_Error ("Couldn't realloc lumpinfo");
 
+    // current lump
     lump_p = &lumpinfo[startlump];
 	
     storehandle = reloadname ? -1 : handle;
-	
+
+    // cycle through all recently added lumps
     for (i=startlump ; i<numlumps ; i++,lump_p++, fileinfo++)
     {
+        /**
+         * Keep the handle to the file, its location in the file
+         * and the size of the chunk
+         */
 	lump_p->handle = storehandle;
 	lump_p->position = LONG(fileinfo->filepos);
 	lump_p->size = LONG(fileinfo->size);
@@ -297,6 +325,7 @@ void W_InitMultipleFiles (char** filenames)
     // will be realloced as lumps are added
     lumpinfo = malloc(1);	
 
+    // Add wad file , one at a time, which ats lump info
     for ( ; *filenames ; filenames++)
 	W_AddFile (*filenames);
 
@@ -319,6 +348,8 @@ void W_InitMultipleFiles (char** filenames)
 //
 // W_InitFile
 // Just initialize from a single file.
+
+// This isnt used but if it was it would load all files and stop when it hits null
 //
 void W_InitFile (char* filename)
 {
@@ -333,6 +364,7 @@ void W_InitFile (char* filename)
 
 //
 // W_NumLumps
+// return total number of lumps (aggregate)
 //
 int W_NumLumps (void)
 {
@@ -343,6 +375,7 @@ int W_NumLumps (void)
 
 //
 // W_CheckNumForName
+// Finds a lump given the name, case insensitive
 // Returns -1 if name not found.
 //
 
@@ -359,6 +392,11 @@ int W_CheckNumForName (char* name)
     lumpinfo_t*	lump_p;
 
     // make the name into two integers for easy compares
+
+    // kinda cool -- here we are copying the data in name to
+    // the union, because a lump name is 8 chars wide its name8
+    // is 9, at this point, ints are still 4 bytes, to a 1 for char
+    // next we will uppercase the s union,
     strncpy (name8.s,name,8);
 
     // in case the name was a fill 8 chars
@@ -367,7 +405,9 @@ int W_CheckNumForName (char* name)
     // case insensitive
     strupr (name8.s);		
 
+    // store the first 4 bytes in v1
     v1 = name8.x[0];
+    // store the second 4 bytes in v2
     v2 = name8.x[1];
 
 
@@ -376,6 +416,12 @@ int W_CheckNumForName (char* name)
 
     while (lump_p-- != lumpinfo)
     {
+
+        // at this point we are big O n
+        // we cast the name to a pointer to a int
+        // and dereference it. this gives us a number
+        // if the number is equal to v1, we try to see if
+        // 2nd half of the name is equal to v2
 	if ( *(int *)lump_p->name == v1
 	     && *(int *)&lump_p->name[4] == v2)
 	{
@@ -392,6 +438,7 @@ int W_CheckNumForName (char* name)
 
 //
 // W_GetNumForName
+// Accessor for lump by using the name , but errors out if its not found
 // Calls W_CheckNumForName, but bombs out if not found.
 //
 int W_GetNumForName (char* name)
@@ -425,6 +472,9 @@ int W_LumpLength (int lump)
 // W_ReadLump
 // Loads the lump into the given buffer,
 //  which must be >= W_LumpLength().
+
+// Given a lump number which is an index into lumpinfo
+// we load data into a void* buffer called destination
 //
 void
 W_ReadLump
@@ -469,6 +519,7 @@ W_ReadLump
 
 //
 // W_CacheLumpNum
+// write out a file that has the name of all the lumps in the wad.
 //
 void*
 W_CacheLumpNum
@@ -484,13 +535,14 @@ W_CacheLumpNum
     {
 	// read the lump in
 	
-	//printf ("cache miss on lump %i\n",lump);
+	printf ("cache miss on lump %i\n",lump);
 	ptr = Z_Malloc (W_LumpLength (lump), tag, &lumpcache[lump]);
+        // this is where we read the lump into the cache
 	W_ReadLump (lump, lumpcache[lump]);
     }
     else
     {
-	//printf ("cache hit on lump %i\n",lump);
+	printf ("cache hit on lump %i\n",lump);
 	Z_ChangeTag (lumpcache[lump],tag);
     }
 	
@@ -501,6 +553,7 @@ W_CacheLumpNum
 
 //
 // W_CacheLumpName
+// cache a lump by name instead of index
 //
 void*
 W_CacheLumpName
@@ -513,6 +566,7 @@ W_CacheLumpName
 
 //
 // W_Profile
+// Used for printint out all the lumps in a wad!
 //
 int		info[2500][10];
 int		profilecount;
