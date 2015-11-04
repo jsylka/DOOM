@@ -535,14 +535,14 @@ W_CacheLumpNum
     {
 	// read the lump in
 	
-	printf ("cache miss on lump %i\n",lump);
+	//printf ("cache miss on lump %i\n",lump);
 	ptr = Z_Malloc (W_LumpLength (lump), tag, &lumpcache[lump]);
         // this is where we read the lump into the cache
 	W_ReadLump (lump, lumpcache[lump]);
     }
     else
     {
-	printf ("cache hit on lump %i\n",lump);
+	//printf ("cache hit on lump %i\n",lump);
 	Z_ChangeTag (lumpcache[lump],tag);
     }
 	
