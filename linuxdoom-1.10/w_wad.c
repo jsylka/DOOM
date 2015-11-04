@@ -379,7 +379,7 @@ int W_NumLumps (void)
 // Returns -1 if name not found.
 //
 
-int W_CheckNumForName (char* name)
+long W_CheckNumForName (char* name)
 {
     union {
 	char	s[9];
@@ -441,7 +441,7 @@ int W_CheckNumForName (char* name)
 // Accessor for lump by using the name , but errors out if its not found
 // Calls W_CheckNumForName, but bombs out if not found.
 //
-int W_GetNumForName (char* name)
+long W_GetNumForName (char* name)
 {
     int	i;
 
