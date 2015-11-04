@@ -127,7 +127,9 @@ void Z_Free (void* ptr)
 
     if (block->id != ZONEID)
 	I_Error ("Z_Free: freed a pointer without ZONEID");
-		
+
+    // sometimes we have a user with a low int val. they are banking on the idea that a memory address would never be
+    // that low.
     if (block->user > (void **)0x100)
     {
 	// smaller values are not pointers

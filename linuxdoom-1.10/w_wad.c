@@ -223,7 +223,7 @@ void W_AddFile (char *filename)
     }
 
     
-    // Fill in lumpinfo -- resize if need be
+    // Fill in lumpinfo -- resize to total number of lumps we have
     lumpinfo = realloc (lumpinfo, numlumps*sizeof(lumpinfo_t));
 
     if (!lumpinfo)
@@ -234,7 +234,7 @@ void W_AddFile (char *filename)
 	
     storehandle = reloadname ? -1 : handle;
 
-    // cycle through all recently added lumps
+    // cycle through all lump nums filling in each of the struts with bookkeeping info
     for (i=startlump ; i<numlumps ; i++,lump_p++, fileinfo++)
     {
         /**
@@ -379,7 +379,7 @@ int W_NumLumps (void)
 // Returns -1 if name not found.
 //
 
-int W_CheckNumForName (char* name)
+long W_CheckNumForName (char* name)
 {
     union {
 	char	s[9];
@@ -441,7 +441,7 @@ int W_CheckNumForName (char* name)
 // Accessor for lump by using the name , but errors out if its not found
 // Calls W_CheckNumForName, but bombs out if not found.
 //
-int W_GetNumForName (char* name)
+long W_GetNumForName (char* name)
 {
     int	i;
 
@@ -519,7 +519,6 @@ W_ReadLump
 
 //
 // W_CacheLumpNum
-// write out a file that has the name of all the lumps in the wad.
 //
 void*
 W_CacheLumpNum
@@ -553,7 +552,8 @@ W_CacheLumpNum
 
 //
 // W_CacheLumpName
-// cache a lump by name instead of index
+// cache a lump by name instead of index - returns a pointer to the memory location of the lumpcache entry that points to
+// a memblock with the lump data - this is used instead of accessing the lump data straight from the wad
 //
 void*
 W_CacheLumpName
@@ -566,7 +566,7 @@ W_CacheLumpName
 
 //
 // W_Profile
-// Used for printint out all the lumps in a wad!
+// write out a file that has the name of all the lumps in the wad.
 //
 int		info[2500][10];
 int		profilecount;
