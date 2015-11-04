@@ -661,11 +661,19 @@ void R_InitColormaps (void)
     
     // Load in the light tables, 
     //  256 byte align tables.
-    lump = W_GetNumForName("COLORMAP"); 
+    lump = W_GetNumForName("COLORMAP");
+    // give it some wiggle room to move
     length = W_LumpLength (lump) + 255; 
-    colormaps = Z_Malloc (length, PU_STATIC, 0); 
-    colormaps = (byte *)( ((int)colormaps + 255)&~0xff); 
-    W_ReadLump (lump,colormaps); 
+    colormaps = Z_Malloc (length, PU_STATIC, 0);
+
+    // Really strange
+    /**
+     * Take color maps - an address to a chunk of memory
+     * It should be zeroed out
+     */
+    // drop the address to a 256 boundary - must have been some kinda tweak back in the day.
+    colormaps = ( ((intptr_t)colormaps + 255)&~0xff);
+    W_ReadLump (lump,colormaps);
 }
 
 
