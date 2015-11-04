@@ -559,7 +559,7 @@ void R_InitTextures (void)
 	mpatch = &mtexture->patches[0];
 	patch = &texture->patches[0];
 
-        printf("patchcount = %hi width = %hi height = %hi\n", mtexture->patchcount, mtexture->width, mtexture->height);
+        printf("%d: (%s) - patchcount = %hi width = %hi height = %hi\n", i, mtexture->name, mtexture->patchcount, mtexture->width, mtexture->height);
         for (j = 0; j < texture->patchcount; j++, mpatch++, patch++) {
 
             patch->originx = SHORT(mpatch->originx);
