@@ -98,11 +98,11 @@ void    W_Reload (void);
 /**
  * Given a name, we check lumpinfo for the lump, it does a really cool string comparison
  */
-long	W_CheckNumForName (char* name);
+int	W_CheckNumForName (char* name);
 /**
  * get the lump index by name
  */
-long	W_GetNumForName (char* name);
+int	W_GetNumForName (char* name);
 
 /**
  * Gets the size of the lump by index

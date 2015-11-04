@@ -379,7 +379,7 @@ int W_NumLumps (void)
 // Returns -1 if name not found.
 //
 
-long W_CheckNumForName (char* name)
+int W_CheckNumForName (char* name)
 {
     union {
 	char	s[9];
@@ -441,7 +441,7 @@ long W_CheckNumForName (char* name)
 // Accessor for lump by using the name , but errors out if its not found
 // Calls W_CheckNumForName, but bombs out if not found.
 //
-long W_GetNumForName (char* name)
+int W_GetNumForName (char* name)
 {
     int	i;
 
@@ -506,7 +506,7 @@ W_ReadLump
 
     if (c < l->size)
 	I_Error ("W_ReadLump: only read %i of %i on lump %i",
-		 c,l->size,lump);	
+		 c,l->size,lump);
 
     if (l->handle == -1)
 	close (handle);
