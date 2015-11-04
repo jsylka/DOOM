@@ -6,7 +6,7 @@
 #
 CC=  gcc  # gcc or g++
 
-CFLAGS=-g -DNORMALUNIX -DLINUX -I/opt/X11/include -std=c99 -m32 # -DUSEASM
+CFLAGS=-g -DNORMALUNIX -DLINUX -I/opt/X11/include -std=c99 -m64 # -DUSEASM
 LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lXext -lX11 -lm
 
