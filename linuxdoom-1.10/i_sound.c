@@ -735,7 +735,8 @@ void I_ShutdownSound(void)
 
 void
 I_InitSound()
-{ 
+{
+    return;
 #ifdef SNDSERV
   char buffer[256];
   
