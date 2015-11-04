@@ -33,3 +33,7 @@
 *.dSYM/
 
 # Created by .ignore support plugin (hsz.mobi)
+
+.DS_Store
+linux/
+DOOM.WAD
