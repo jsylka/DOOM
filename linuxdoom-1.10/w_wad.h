@@ -70,6 +70,8 @@ typedef struct
 
 //
 // WADFILE I/O related stuff.
+// So a lump info - holds book keeping info, and the main part is the handle which is a file and a position into the file
+// where the data resides, if we are so inclined we can 'cache' the data in lumpcache
 //
 typedef struct
 {
@@ -79,13 +81,13 @@ typedef struct
     int		size;
 } lumpinfo_t;
 
-
+// all lumps will be in this look up table - lump # -> data (we use this instead of doing disk i/o in the wad file)
 extern	void**		lumpcache;
 extern	lumpinfo_t*	lumpinfo;
 extern	int		numlumps;
 
 /**
- *
+ * Loads multiple wad files - called from D_DoomMain
  */
 void    W_InitMultipleFiles (char** filenames);
 /**
@@ -94,29 +96,29 @@ void    W_InitMultipleFiles (char** filenames);
 void    W_Reload (void);
 
 /**
- *
+ * Given a name, we check lumpinfo for the lump, it does a really cool string comparison
  */
-int	W_CheckNumForName (char* name);
+long	W_CheckNumForName (char* name);
 /**
- *
+ * get the lump index by name
  */
-int	W_GetNumForName (char* name);
+long	W_GetNumForName (char* name);
 
 /**
- *
+ * Gets the size of the lump by index
  */
 int	W_LumpLength (int lump);
 /**
- *
+ * Reads data from wad file into buffer - indexed by lump
  */
 void    W_ReadLump (int lump, void *dest);
 
 /**
- *
+ * given an index to a lump and a tag, we will cache the lump data and return it to you
  */
 void*	W_CacheLumpNum (int lump, int tag);
 /**
- *
+ * given a name and a tag, we will cache the lump data and return it to you
  */
 void*	W_CacheLumpName (char* name, int tag);
 
